@@ -1,0 +1,204 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<!--script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script-->
+<!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+<!--link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"-->
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
+			<div class="page-header">
+				<div id="dg" style="z-index: 9999; position: fixed ! important; right: 18px; top: 0px;">
+						<button id="c4" class="btn btn-large btn-block" type="button">重新测试</button>
+				</div>
+
+				<h3 id="yz">
+				loading....
+			</h3> <button id="startbtn" class="btn btn-block" type="button">开始测试</button>
+				<h2 id="title1">
+					 <small>loading...</small>
+				</h2>
+				<h4 id="progress">
+					 <small>loading...</small>
+				</h4>
+				<h1 id="title">
+					 <small>loading...</small>
+				</h1>
+				<h3 id="result">loading...</h3>
+			</div> <button id="c1" class="btn btn-large btn-block" type="button">经常</button> <button id="c2" class="btn btn-large btn-block" type="button">偶尔</button> <button id="c3" class="btn btn-large btn-block" type="button">很少</button>
+		</div>
+	</div>
+</div>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style type="text/css">
+	body {
+    height: 100%;
+    width: 100%;
+}
+
+button{
+		width: 100%;
+		height: 60px;
+	}
+	
+	#c4{
+		width: 78px;
+		height: 30px;
+		}
+</style>
+
+
+<script>
+$(document).ready(function(){
+	
+			
+		var s=0;
+		var current_index=0;
+		var d;
+		var id = getUrlParam('cid');
+		var url="q.json";//"http://myapiys.com/cs/items?cid="+id;
+		
+		init();
+		
+		/**
+ * 取得url参数
+ */
+function getUrlParam(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); // 构造一个含有目标参数的正则表达式对象
+    var r = window.location.search.substr(1).match(reg);  // 匹配目标参数
+    if (r != null) return unescape(r[2]); return null; // 返回参数值
+}
+
+function init(){
+	$("#yz").show();
+	$("#dg").hide();
+		$("#title").hide();
+		$("#c1").hide();
+			$("#c2").hide();
+			$("#c3").hide();
+			$("#title1").hide();
+			$("#startbtn").hide();
+			$("#progress").hide();
+			$("#result").hide();
+			current_index=0;
+							s=0;
+	}
+
+
+		function showOver(){
+			
+			$("#c1").hide();
+			$("#c2").hide();
+			$("#c3").hide();
+			$("#title").hide();
+			$("#progress").hide();
+			
+			$("#result").show();
+			$("#dg").show();
+			var rt = d.result;
+			for(var i=0;i<rt.length;i++){
+				for(var value in rt[i])
+				{
+					var v1 = value.split("~")[0];
+					var v2 = value.split("~")[1];
+					if(s>=v1&&s<=v2){
+						$("#result").html(rt[i][value].replace(/\n/g,'<br>'));
+						//alert(rt[i][value]);
+						//alert(v1);
+						//alert(v2);
+						//alert(s);
+					}
+				}
+			}
+			
+			$("#c4").click(function(){
+							
+							init();
+							startTest(d);
+					});
+		}
+			
+			function startTest(d){
+				$("#yz").html(d.intro);
+					$("#startbtn").show();
+					$("#startbtn").click(function(){
+						
+							$("#yz").hide();
+							$("#startbtn").hide();
+							
+							$("#progress").show();
+							$("#title1").show();
+							$("#title").show();
+							$("#c1").show();
+							$("#c2").show();
+							$("#c3").show();
+						
+					});
+	    		//alert("数据: " + JSON.parse(data).title + "\n状态: " + status);
+	    		$("#title1").html(d.title);
+	    		$("#title").text(d.qs[0].q);
+	    		
+	    		var len = d.qs.length;
+	    		$("#progress").text("当前第1题,一共"+len+"题");
+	    		
+	    		
+	    		$("#c1").click(function(){
+	    			current_index++;
+	    			if(current_index<len){
+							s+=3;
+							$("#title").text(d.qs[current_index].q);
+							$("#progress").text("当前第"+current_index+"题,一共"+len+"题");
+						}
+						else
+						{
+							showOver();
+						}
+						
+						
+						
+					});
+					
+					$("#c2").click(function(){
+							current_index++;
+							if(current_index<len){
+							s+=2;
+							$("#title").text(d.qs[current_index].q);
+							$("#progress").text("当前第"+current_index+"题,一共"+len+"题");
+						}else
+						{
+							showOver();
+						}
+						
+					});
+					
+					$("#c3").click(function(){
+							current_index++;
+							if(current_index<len){
+									s+=1;
+									$("#title").text(d.qs[current_index].q);
+									$("#progress").text("当前第"+current_index+"题,一共"+len+"题");
+								}else
+								{
+									showOver();
+								}
+								
+					});
+			}
+			
+			
+			$.get(url,function(data,status)
+			{
+				if(status=="success")
+				{
+					d = typeof data=='string'?JSON.parse(data):data;
+					startTest(d);
+					
+					}//end if(status=="success")
+					
+	  	});
+  	
+	
+		
+		
+});
+</script>
