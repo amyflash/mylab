@@ -1,0 +1,22 @@
+/**
+		 * 等额本息还款法:
+每月月供额=〔贷款本金×月利率×(1＋月利率)＾还款月数〕÷〔(1＋月利率)＾还款月数-1〕
+每月应还利息=贷款本金×月利率×〔(1+月利率)^还款月数-(1+月利率)^(还款月序号-1)〕÷〔(1+月利率)^还款月数-1〕
+每月应还本金=贷款本金×月利率×(1+月利率)^(还款月序号-1)÷〔(1+月利率)^还款月数-1〕
+总利息=还款月数×每月月供额-贷款本金
+		 */
+		
+		private function start():void{
+			//var loan:Number = 2000;//贷款本金
+			var li:Number = 0.095/12;//月利润
+			var n:int = 6;//期数
+			//每月还款
+			//var monthhuan:Number = loan * (li * Math.pow((1 + li), n)) / (Math.pow((1 + li), n) - 1);
+			//trace(monthhuan);//1715.6139
+			//每月还款yuegong，求benjin
+			var lixiguanli:Number = 0.1;//利息管理费
+			
+			var yuegong:Number = 308.15/(1-lixiguanli);
+			var benjin:Number = yuegong / ((li * Math.pow((1 + li), n)) / (Math.pow((1 + li), n) - 1));
+			trace(benjin);
+		}
